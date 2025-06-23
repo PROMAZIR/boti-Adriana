@@ -1,0 +1,554 @@
+             <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tv-Adriane</title>
+    <!-- Meta tags com emoji para identificação de gênero -->
+    <meta name="title" content="Adriane">
+    <meta name="description" content="Gerencie suas compras e parcelas de forma simples e eficiente">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tv.adriane.starktech.net.br">
+    <meta property="og:title" content="Adriane">
+    <meta property="og:description" content="Gerencie suas compras e parcelas de forma simples e eficiente">
+    <meta property="og:image" content="https://i.ibb.co/kj8jVkq/Logotipo-Faustino-Representa-es-e-Vendas-Moderno-Preto-Branco-2.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://tv.adriane.starktech.net.br">
+    <meta name="twitter:title" content="Adriane">
+    <meta name="twitter:description" content="Gerencie suas compras e parcelas de forma simples e eficiente">
+    <meta name="twitter:image" content="https://i.ibb.co/kj8jVkq/Logotipo-Faustino-Representa-es-e-Vendas-Moderno-Preto-Branco-2.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 50%, #f8b500 100%);
+        }
+        
+        #app-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        /* Banner de aniversário feminino */
+        #birthday-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 30%, #f8b500 70%, #ff9ff3 100%);
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 182, 193, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 105, 180, 0.2) 0%, transparent 50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            overflow: hidden;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        /* Animação de confetes */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff69b4;
+            animation: confetti-fall 3s linear infinite;
+        }
+        
+        .confetti:nth-child(1) { left: 10%; animation-delay: 0s; background: #ff1493; }
+        .confetti:nth-child(2) { left: 20%; animation-delay: 0.5s; background: #ffd700; }
+        .confetti:nth-child(3) { left: 30%; animation-delay: 1s; background: #ff69b4; }
+        .confetti:nth-child(4) { left: 40%; animation-delay: 1.5s; background: #ff6347; }
+        .confetti:nth-child(5) { left: 50%; animation-delay: 2s; background: #da70d6; }
+        .confetti:nth-child(6) { left: 60%; animation-delay: 0.3s; background: #ffd700; }
+        .confetti:nth-child(7) { left: 70%; animation-delay: 0.8s; background: #ff1493; }
+        .confetti:nth-child(8) { left: 80%; animation-delay: 1.3s; background: #ff69b4; }
+        .confetti:nth-child(9) { left: 90%; animation-delay: 1.8s; background: #da70d6; }
+        
+        @keyframes confetti-fall {
+            0% { 
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% { 
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Balões flutuantes */
+        .balloon {
+            position: absolute;
+            width: 40px;
+            height: 50px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .balloon:nth-child(1) { 
+            background: #ff69b4; 
+            top: 20%; 
+            left: 10%; 
+            animation-delay: 0s; 
+        }
+        .balloon:nth-child(2) { 
+            background: #ffd700; 
+            top: 30%; 
+            right: 15%; 
+            animation-delay: 2s; 
+        }
+        .balloon:nth-child(3) { 
+            background: #da70d6; 
+            bottom: 30%; 
+            left: 15%; 
+            animation-delay: 4s; 
+        }
+        .balloon:nth-child(4) { 
+            background: #ff1493; 
+            bottom: 20%; 
+            right: 10%; 
+            animation-delay: 1s; 
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(-5deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        /* Conteúdo do banner */
+        .birthday-content {
+            max-width: 90%;
+            width: 400px;
+            padding: 40px 30px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .birthday-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ffffff, #ffe4e1, #ffb6c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes titleGlow {
+            0% { filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5)); }
+            100% { filter: drop-shadow(0 0 20px rgba(255, 182, 193, 0.8)); }
+        }
+        
+        .birthday-subtitle {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #fff;
+            font-weight: 500;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .birthday-message {
+            font-size: 16px;
+            margin-bottom: 30px;
+            color: #ffe4e1;
+            font-weight: 300;
+            line-height: 1.6;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        
+        .birthday-button {
+            background: linear-gradient(45deg, #ff1493, #ff69b4, #ffd700);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 20, 147, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            animation: buttonPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes buttonPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .birthday-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .birthday-button:hover::before {
+            left: 100%;
+        }
+        
+        .birthday-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 20, 147, 0.6);
+        }
+        
+        /* Corações flutuantes */
+        .heart {
+            position: absolute;
+            color: rgba(255, 182, 193, 0.7);
+            font-size: 20px;
+            animation: heartFloat 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        .heart:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+        .heart:nth-child(2) { top: 20%; right: 8%; animation-delay: 2s; }
+        .heart:nth-child(3) { bottom: 25%; left: 8%; animation-delay: 4s; }
+        .heart:nth-child(4) { bottom: 15%; right: 5%; animation-delay: 1s; }
+        .heart:nth-child(5) { top: 50%; left: 3%; animation-delay: 3s; }
+        .heart:nth-child(6) { top: 60%; right: 3%; animation-delay: 5s; }
+        
+        @keyframes heartFloat {
+            0%, 100% { 
+                transform: translateY(0px) scale(1) rotate(0deg);
+                opacity: 0.7;
+            }
+            25% { 
+                transform: translateY(-15px) scale(1.2) rotate(5deg);
+                opacity: 1;
+            }
+            50% { 
+                transform: translateY(-30px) scale(1) rotate(-5deg);
+                opacity: 0.8;
+            }
+            75% { 
+                transform: translateY(-15px) scale(1.1) rotate(3deg);
+                opacity: 0.9;
+            }
+        }
+        
+        /* Sparkles */
+        .sparkle {
+            position: absolute;
+            color: #ffd700;
+            font-size: 16px;
+            animation: sparkleAnimation 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        .sparkle:nth-child(1) { top: 15%; left: 15%; animation-delay: 0s; }
+        .sparkle:nth-child(2) { top: 25%; right: 20%; animation-delay: 1s; }
+        .sparkle:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 2s; }
+        .sparkle:nth-child(4) { bottom: 20%; right: 15%; animation-delay: 0.5s; }
+        
+        @keyframes sparkleAnimation {
+            0%, 100% { 
+                transform: scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% { 
+                transform: scale(1.5) rotate(180deg);
+                opacity: 1;
+            }
+        }
+        
+        /* Estilos para o iframe */
+        .frame-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: white;
+            z-index: 900;
+            display: none;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: white;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 480px) {
+            .birthday-title {
+                font-size: 36px;
+            }
+            
+            .birthday-subtitle {
+                font-size: 20px;
+            }
+            
+            .birthday-button {
+                padding: 16px 32px;
+                font-size: 16px;
+            }
+            
+            .birthday-content {
+                padding: 30px 20px;
+                width: 85%;
+            }
+            
+            .balloon {
+                width: 30px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <!-- Banner de aniversário feminino -->
+        <div id="birthday-banner">
+            <!-- Confetes animados -->
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+
+            <!-- Balões flutuantes -->
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+            <div class="balloon"></div>
+
+            <!-- Corações flutuantes -->
+            <div class="heart">💖</div>
+            <div class="heart">💕</div>
+            <div class="heart">💗</div>
+            <div class="heart">💝</div>
+            <div class="heart">💖</div>
+            <div class="heart">💕</div>
+
+            <!-- Sparkles -->
+            <div class="sparkle">✨</div>
+            <div class="sparkle">⭐</div>
+            <div class="sparkle">✨</div>
+            <div class="sparkle">⭐</div>
+
+            <!-- Conteúdo principal do banner -->
+            <div class="birthday-content">
+                <h1 class="birthday-title">🎉 Parabéns Adriane! 🎉</h1>
+                <h2 class="birthday-subtitle">🌸 Feliz Aniversário! 🌸</h2>
+                <p class="birthday-message">
+                    Que este dia especial seja repleto de alegria, amor e realizações! 
+                    Desejamos que todos os seus sonhos se tornem realidade e que a felicidade 
+                    esteja sempre presente em sua vida. 💐✨
+                </p>
+                <button class="birthday-button" onclick="enterApp()">
+                    🎁 Entrar na Celebração 🎁
+                </button>
+            </div>
+        </div>
+
+        <!-- Container do iframe -->
+        <div class="frame-container" id="frame-container">
+            <iframe id="main-iframe" src="https://script.google.com/macros/s/AKfycbzEy6UhcVidysOgOmlrTAkLILv65LUPcHQ3sqCgs9eNuWr1cV6GPsxjGWLHNNzxP6wR/exec" title="TV Adriane"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Função para entrar no app
+        function enterApp() {
+            const banner = document.getElementById('birthday-banner');
+            const frameContainer = document.getElementById('frame-container');
+            
+            // Animação de saída do banner
+            banner.style.opacity = '0';
+            banner.style.transform = 'scale(0.8)';
+            
+            setTimeout(() => {
+                banner.style.display = 'none';
+                frameContainer.style.display = 'block';
+                
+                // Animação de entrada do iframe
+                frameContainer.style.opacity = '0';
+                frameContainer.style.transform = 'scale(0.9)';
+                
+                setTimeout(() => {
+                    frameContainer.style.transition = 'all 0.5s ease';
+                    frameContainer.style.opacity = '1';
+                    frameContainer.style.transform = 'scale(1)';
+                }, 50);
+            }, 800);
+        }
+
+        // Adicionar mais confetes dinamicamente
+        function createConfetti() {
+            const banner = document.getElementById('birthday-banner');
+            const colors = ['#ff1493', '#ffd700', '#ff69b4', '#da70d6', '#ff6347'];
+            
+            for (let i = 0; i < 20; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                banner.appendChild(confetti);
+                
+                // Remove o confete após a animação
+                setTimeout(() => {
+                    if (confetti.parentNode) {
+                        confetti.parentNode.removeChild(confetti);
+                    }
+                }, 5000);
+            }
+        }
+
+        // Criar confetes a cada 2 segundos
+        setInterval(createConfetti, 2000);
+
+        // Adicionar efeito de partículas ao mover o mouse
+        document.addEventListener('mousemove', function(e) {
+            if (document.getElementById('birthday-banner').style.display !== 'none') {
+                const particle = document.createElement('div');
+                particle.style.position = 'fixed';
+                particle.style.left = e.clientX + 'px';
+                particle.style.top = e.clientY + 'px';
+                particle.style.width = '4px';
+                particle.style.height = '4px';
+                particle.style.background = '#ffd700';
+                particle.style.borderRadius = '50%';
+                particle.style.pointerEvents = 'none';
+                particle.style.zIndex = '10000';
+                particle.style.animation = 'particleFade 1s ease-out forwards';
+                
+                document.body.appendChild(particle);
+                
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 1000);
+            }
+        });
+
+        // Adicionar animação para as partículas do mouse
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes particleFade {
+                0% {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+                100% {
+                    opacity: 0;
+                    transform: scale(0) translateY(-20px);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Preload do iframe
+        window.addEventListener('load', function() {
+            const iframe = document.getElementById('main-iframe');
+            iframe.onload = function() {
+                console.log('TV Adriane carregada com sucesso!');
+            };
+        });
+
+        // Adicionar efeito de clique no botão
+        document.querySelector('.birthday-button').addEventListener('click', function(e) {
+            // Criar efeito de explosão de corações
+            for (let i = 0; i < 10; i++) {
+                const heart = document.createElement('div');
+                heart.innerHTML = '💖';
+                heart.style.position = 'fixed';
+                heart.style.left = e.clientX + 'px';
+                heart.style.top = e.clientY + 'px';
+                heart.style.fontSize = '20px';
+                heart.style.pointerEvents = 'none';
+                heart.style.zIndex = '10001';
+                heart.style.animation = `heartExplosion 2s ease-out forwards`;
+                heart.style.animationDelay = (i * 0.1) + 's';
+                
+                const angle = (i / 10) * Math.PI * 2;
+                const distance = 100;
+                const endX = Math.cos(angle) * distance;
+                const endY = Math.sin(angle) * distance;
+                
+                heart.style.setProperty('--endX', endX + 'px');
+                heart.style.setProperty('--endY', endY + 'px');
+                
+                document.body.appendChild(heart);
+                
+                setTimeout(() => {
+                    if (heart.parentNode) {
+                        heart.parentNode.removeChild(heart);
+                    }
+                }, 2000);
+            }
+        });
+
+        // Adicionar animação para explosão de corações
+        const heartExplosionStyle = document.createElement('style');
+        heartExplosionStyle.textContent = `
+            @keyframes heartExplosion {
+                0% {
+                    opacity: 1;
+                    transform: scale(1) translate(0, 0);
+                }
+                100% {
+                    opacity: 0;
+                    transform: scale(0.5) translate(var(--endX), var(--endY));
+                }
+            }
+        `;
+        document.head.appendChild(heartExplosionStyle);
+
+        // Adicionar música de fundo (opcional - descomente se desejar
+        const audio = new Audio();
+        audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmHgU7k9n1unEiBC13yO/eizEIHWq+8+OWT';
+        audio.loop = true;
+        audio.volume = 0.3;
+        
+        document.querySelector('.birthday-button').addEventListener('click', function() {
+            audio.play().catch(e => console.log('Áudio não pôde ser reproduzido'));
+        });
+        */
+    </script>
+</body>
+</html>
