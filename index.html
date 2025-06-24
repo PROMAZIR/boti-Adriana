@@ -40,13 +40,21 @@
             overflow: hidden;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f5f5f5;
+            /* Força altura total em dispositivos móveis */
+            min-height: 100vh;
+            min-height: 100dvh; /* Dynamic viewport height */
         }
         
         /* Container principal - iframe ocupa toda a tela */
         #app-container {
-            width: 100%;
+            width: 100vw;
             height: 100vh;
-            position: relative;
+            height: 100dvh; /* Dynamic viewport height para mobile */
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
         }
         
         /* Iframe principal */
@@ -56,6 +64,9 @@
             border: none;
             background-color: white;
             display: block;
+            /* Garante que o iframe seja responsivo */
+            min-width: 100%;
+            min-height: 100%;
         }
         
         /* Botão de instalação PWA */
@@ -191,8 +202,8 @@
             transform: rotate(360deg);
         }
         
-        /* Responsividade */
-        @media (max-width: 768px) {
+        /* Responsividade total */
+        @media screen and (max-width: 768px) {
             #install-button {
                 bottom: 10px;
                 padding: 10px 20px;
@@ -204,6 +215,50 @@
                 right: 10px;
                 width: 40px;
                 height: 40px;
+            }
+            
+            /* Força o iframe a ocupar toda a tela no mobile */
+            #app-container {
+                width: 100vw;
+                height: 100vh;
+                height: 100dvh;
+            }
+            
+            #app-frame {
+                width: 100vw;
+                height: 100vh;
+                height: 100dvh;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            #install-button {
+                bottom: 5px;
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+            
+            #refresh-button {
+                top: 5px;
+                right: 5px;
+                width: 36px;
+                height: 36px;
+            }
+        }
+        
+        /* Orientação landscape no mobile */
+        @media screen and (max-height: 500px) and (orientation: landscape) {
+            #install-button {
+                bottom: 5px;
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            
+            #refresh-button {
+                top: 5px;
+                right: 5px;
+                width: 32px;
+                height: 32px;
             }
         }
     </style>
@@ -263,6 +318,35 @@
                 loadingIndicator.style.display = 'none';
             }, 3000);
         });
+        
+        // Garantir responsividade total
+        function ensureResponsive() {
+            const container = document.getElementById('app-container');
+            const iframe = document.getElementById('app-frame');
+            
+            // Forçar dimensões da viewport
+            const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+            const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+            
+            container.style.width = vw + 'px';
+            container.style.height = vh + 'px';
+            iframe.style.width = vw + 'px';
+            iframe.style.height = vh + 'px';
+        }
+        
+        // Executar quando a página carregar
+        window.addEventListener('load', ensureResponsive);
+        
+        // Executar quando a tela redimensionar
+        window.addEventListener('resize', ensureResponsive);
+        
+        // Executar quando a orientação mudar (mobile)
+        window.addEventListener('orientationchange', () => {
+            setTimeout(ensureResponsive, 100);
+        });
+        
+        // Executar imediatamente
+        document.addEventListener('DOMContentLoaded', ensureResponsive);
         
         // Manipular carregamento do iframe
         appFrame.addEventListener('load', () => {
