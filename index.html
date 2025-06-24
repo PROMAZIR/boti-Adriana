@@ -4,858 +4,404 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Fest-Adriane</title>
-    <!-- Meta tags com emoji para identificação de gênero -->
+    
+    <!-- Meta tags originais -->
     <meta name="title" content="pode-posta">
-    <meta name="description" content=""Compartilhe o seu momento com o mundo."">
+    <meta name="description" content="Compartilhe o seu momento com o mundo.">
     <meta property="og:type" content="Fest-Adriane">
     <meta property="og:url" content="https://vips-adriane.bercho.com.br">
     <meta property="og:title" content="Fest-Adriane">
-    <meta property="og:description" content=""Poste agora e inspire alguém hoje."">
+    <meta property="og:description" content="Poste agora e inspire alguém hoje.">
     <meta property="og:image" content="https://i.ibb.co/kj8jVkq/Logotipo-Faustino-Representa-es-e-Vendas-Moderno-Preto-Branco-2.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://vips-adriane.bercho.com.br">
     <meta name="twitter:title" content="Fest-Adriane">
-    <meta name="twitter:description" content=""Mostre o que está fazendo – sua vibe é única!"">
+    <meta name="twitter:description" content="Mostre o que está fazendo – sua vibe é única!">
     <meta name="twitter:image" content="https://i.ibb.co/kj8jVkq/Logotipo-Faustino-Representa-es-e-Vendas-Moderno-Preto-Branco-2.png">
+    
+    <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
+    
     <style>
-        body, html {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body, html {
             width: 100%;
             height: 100%;
             overflow: hidden;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: white;
+            background-color: #f5f5f5;
         }
         
+        /* Container principal - iframe ocupa toda a tela */
         #app-container {
             width: 100%;
-            height: 100%;
+            height: 100vh;
             position: relative;
         }
         
-        /* Tela de carregamento com cumprimentos */
-        #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        
-        .loading-container {
-            text-align: center;
-            padding: 20px;
-            border-radius: 15px;
-            background-color: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            max-width: 85%;
-        }
-        
-        .greeting {
-            font-size: 22px;
-            font-weight: 600;
-            color: #4a4a4a;
-            margin-bottom: 5px;
-        }
-        
-        .user-name {
-            font-size: 20px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            /* Cor será definida dinamicamente pelo JavaScript */
-        }
-        
-        .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #ff69b4; /* Cor padrão, será alterada pelo JS */
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 10px auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Estilos para o iframe */
-        .frame-container {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background-color: white;
-            z-index: 900;
-        }
-        
-        iframe {
+        /* Iframe principal */
+        #app-frame {
             width: 100%;
             height: 100%;
             border: none;
             background-color: white;
+            display: block;
         }
         
-        /* Estilos para o botão de instalação */
+        /* Botão de instalação PWA */
         #install-button {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            /* Cor será definida dinamicamente pelo JavaScript */
+            background-color: #007bff;
             color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            padding: 12px 24px;
+            border-radius: 25px;
+            box-shadow: 0 4px 12px rgba(0,123,255,0.3);
             z-index: 1000;
             display: none;
             cursor: pointer;
             border: none;
             font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
         
-        /* Estado offline */
-        #offline-message {
+        #install-button:hover {
+            background-color: #0056b3;
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,123,255,0.4);
+        }
+        
+        /* Mensagem de erro/offline */
+        #error-message {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
             text-align: center;
             z-index: 2000;
             display: none;
+            max-width: 90%;
+            width: 400px;
+        }
+        
+        .error-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .error-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+        
+        .error-description {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
         
         .retry-button {
-            /* Cor será definida dinamicamente pelo JavaScript */
+            background-color: #007bff;
             color: white;
             border: none;
-            padding: 10px 20px;
-            margin-top: 15px;
-            border-radius: 5px;
+            padding: 12px 24px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.2s;
         }
         
-        /* Modal para nome do usuário */
-        #name-modal {
+        .retry-button:hover {
+            background-color: #0056b3;
+        }
+        
+        /* Indicador de carregamento mínimo */
+        #loading-indicator {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
+            height: 3px;
+            background-color: #007bff;
+            transform-origin: left;
+            transform: scaleX(0);
+            animation: loading-progress 2s ease-out forwards;
+            z-index: 1000;
             display: none;
         }
         
-        .modal-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            text-align: center;
-            max-width: 85%;
-            width: 300px;
+        @keyframes loading-progress {
+            0% { transform: scaleX(0); }
+            50% { transform: scaleX(0.7); }
+            100% { transform: scaleX(1); opacity: 0; }
         }
         
-        .modal-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #4a4a4a;
-        }
-        
-        #user-name-input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-            box-sizing: border-box;
-        }
-        
-        /* Seleção de gênero */
-        .gender-selection {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        
-        .gender-option {
-            flex: 1;
-            padding: 10px;
-            margin: 0 5px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .gender-option.selected {
-            border-color: #4a4a4a;
-            background-color: #f8f8f8;
-        }
-        
-        .gender-option:first-child.selected {
-            border-color: #4e9af1;
-            background-color: #eef5ff;
-        }
-        
-        .gender-option:last-child.selected {
-            border-color: #ff69b4;
-            background-color: #fff0f7;
-        }
-        
-        #save-name-button {
-            /* Cor será definida dinamicamente pelo JavaScript */
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-        }
-        
-        /* Estilos para o container de logos */
-        .logo-container {
-            position: relative;
-            width: 100px;
-            height: 100px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        /* Estilos base para as logos */
-        .logo {
-            position: absolute;
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
-            opacity: 0;
-            transition: opacity 0.8s ease, transform 0.8s ease;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.95);
-        }
-        
-        /* Logo ativa */
-        .logo.active {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
-        
-        /* Animação de pulsar suave */
-        @keyframes pulse {
-            0% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.05); }
-            100% { transform: translate(-50%, -50%) scale(1); }
-        }
-        
-        /* Classe para aplicar a animação de pulsar */
-        .pulse {
-            animation: pulse 4s infinite ease-in-out;
-        }
-        
-        /* Estilos para o botão de atualização */
+        /* Botão de atualização/refresh */
         #refresh-button {
             position: fixed;
-            bottom: 20px;
+            top: 20px;
             right: 20px;
-            width: 50px;
-            height: 50px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            display: flex;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: none;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             z-index: 1000;
-            overflow: hidden;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        
+        #refresh-button:hover {
+            background-color: white;
+            transform: scale(1.05);
         }
         
         .refresh-icon {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
+            stroke: #666;
             transition: transform 0.3s ease;
-        }
-        
-        .refresh-progress {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border: 3px solid transparent;
-            border-radius: 50%;
-            box-sizing: border-box;
-            transition: transform 1s linear;
         }
         
         #refresh-button.refreshing .refresh-icon {
             transform: rotate(360deg);
         }
         
-        #refresh-button.refreshing .refresh-progress {
-            transform: rotate(360deg);
-        }
-        
-        /* Estilos para o toast de notificação */
-        #toast-notification {
-            position: fixed;
-            bottom: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(50, 50, 50, 0.9);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            z-index: 2000;
-            transition: all 0.3s ease;
-            opacity: 0;
-            font-size: 14px;
-        }
-        
-        /* Estilos para o menu flutuante */
-        .admin-float-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: rgba(0, 123, 255, 0.8);
-            color: white;
-            border: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            transition: all 0.3s ease;
-            font-size: 20px;
-        }
-        
-        .admin-float-button.active {
-            background-color: #28a745;
-        }
-        
-        .float-menu {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            z-index: 1000;
-            width: 200px;
-        }
-        
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 16px;
-            background-color: white;
-            color: #4a4a4a;
-            border: none;
-            text-align: left;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.2s;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .menu-item:last-child {
-            border-bottom: none;
-        }
-        
-        .menu-item:hover {
-            background-color: #f5f5f5;
+        /* Responsividade */
+        @media (max-width: 768px) {
+            #install-button {
+                bottom: 10px;
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            #refresh-button {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+            }
         }
     </style>
 </head>
 <body>
     <div id="app-container">
-        <!-- Frame do aplicativo (colocado primeiro para pré-carregar) -->
-        <div class="frame-container" id="frame-container">
-            <iframe 
-                id="app-frame"
-                src="https://script.google.com/macros/s/AKfycbxg-oYpsIWPOqPTIoZCBcunh04oOPkKNThTSTq8-US89mJyoi_g3lN4vxOZGz9Pqd_qnA/exec"
-                allow="autoplay; camera; microphone; fullscreen"
-                allowfullscreen
-                loading="eager"
-                sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-top-navigation">
-            </iframe>
+        <!-- Indicador de carregamento mínimo -->
+        <div id="loading-indicator"></div>
+        
+        <!-- Iframe principal -->
+        <iframe 
+            id="app-frame"
+            src="https://script.google.com/macros/s/AKfycbxg-oYpsIWPOqPTIoZCBcunh04oOPkKNThTSTq8-US89mJyoi_g3lN4vxOZGz9Pqd_qnA/exec"
+            allow="autoplay; camera; microphone; fullscreen"
+            allowfullscreen
+            loading="eager"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals allow-downloads allow-top-navigation">
+        </iframe>
+        
+        <!-- Mensagem de erro -->
+        <div id="error-message">
+            <div class="error-icon">⚠️</div>
+            <div class="error-title">Ops! Algo deu errado</div>
+            <div class="error-description">Não foi possível carregar o aplicativo. Verifique sua conexão e tente novamente.</div>
+            <button class="retry-button" onclick="retryConnection()">Tentar Novamente</button>
         </div>
         
-        <!-- Tela de carregamento com cumprimentos (colocada por cima) -->
-        <div id="loading-screen">
-            <div class="loading-container">
-                <div class="logo-container">
-                    <img src="https://i.ibb.co/vx4BtbSv/Sem-t-tulo-1.png" alt="Logo 1" class="logo logo-1 active">
-                     <img src="https://i.ibb.co/kj8jVkq/Logotipo-Faustino-Representa-es-e-Vendas-Moderno-Preto-Branco-2.png" alt="Logo 2" class="logo logo-2">
-                </div>
-                <div class="greeting" id="greeting">Olá!</div>
-                <div class="user-name" id="user-name">Bem-vindo(a)!</div>
-                <div class="loading-spinner" id="loading-spinner"></div>
-            </div>
-        </div>
+        <!-- Botão de instalação PWA -->
+        <button id="install-button" onclick="installApp()">📱 Instalar App</button>
         
-        <!-- Mensagem offline -->
-        <div id="offline-message">
-            <p>Você está offline. Verifique sua conexão com a internet.</p>
-            <button class="retry-button" id="retry-button" onclick="window.location.reload()">Tentar Novamente</button>
-        </div>
-        
-        <!-- Modal para inserir nome -->
-        <div id="name-modal">
-            <div class="modal-content">
-                <div class="modal-title">Como você gostaria de ser chamado(a)?</div>
-                <input type="text" id="user-name-input" placeholder="Digite seu nome" maxlength="20">
-                
-                <div class="gender-selection">
-                    <div class="gender-option" id="male-option">
-                        <span>👨 Masculino</span>
-                    </div>
-                    <div class="gender-option" id="female-option">
-                        <span>👩 Feminino</span>
-                    </div>
-                </div>
-                
-                <button id="save-name-button">Salvar</button>
-            </div>
-        </div>
-        
-        <!-- Botão de instalação -->
-        <button id="install-button">Adicionar à tela inicial</button>
+        <!-- Botão de refresh -->
+        <button id="refresh-button" onclick="refreshApp()">
+            <svg class="refresh-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+        </button>
     </div>
-    
+
     <script>
         // Elementos principais
-        const loadingScreen = document.getElementById('loading-screen');
         const appFrame = document.getElementById('app-frame');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const errorMessage = document.getElementById('error-message');
         const installButton = document.getElementById('install-button');
-        const offlineMessage = document.getElementById('offline-message');
-        const greeting = document.getElementById('greeting');
-        const userName = document.getElementById('user-name');
-        const nameModal = document.getElementById('name-modal');
-        const userNameInput = document.getElementById('user-name-input');
-        const saveNameButton = document.getElementById('save-name-button');
-        const loadingSpinner = document.getElementById('loading-spinner');
-        const retryButton = document.getElementById('retry-button');
-        const maleOption = document.getElementById('male-option');
-        const femaleOption = document.getElementById('female-option');
+        const refreshButton = document.getElementById('refresh-button');
         
-        // Cores baseadas no gênero
-        const colors = {
-            male: '#4e9af1',    // Azul
-            female: '#ff69b4',  // Rosa
-            neutral: '#7e57c2'  // Roxo (neutro)
-        };
-        
-        // Emojis baseados no gênero
-        const emojis = {
-            male: '🎮',
-            female: '💄',
-            neutral: '👤'
-        };
-        
-        // Variável para armazenar o gênero selecionado
-        let selectedGender = 'neutral';
-        
-        // Variável para armazenar o prompt de instalação
         let deferredPrompt;
+        let retryCount = 0;
+        const maxRetries = 3;
         
-        document.addEventListener('DOMContentLoaded', function() {
-            // Seleciona as logos
-            const logo1 = document.querySelector('.logo-1');
-            const logo2 = document.querySelector('.logo-2');
+        // Mostrar indicador de carregamento no início
+        document.addEventListener('DOMContentLoaded', () => {
+            loadingIndicator.style.display = 'block';
             
-            // Inicializa: primeira logo ativa e com efeito de pulsar
-            logo1.classList.add('active', 'pulse');
-            
-            // Função para alternar entre as logos
-            function toggleLogos() {
-                if (logo1.classList.contains('active')) {
-                    // Transição para a segunda logo
-                    logo1.classList.remove('active', 'pulse');
-                    logo2.classList.add('active', 'pulse');
-                } else {
-                    // Transição para a primeira logo
-                    logo2.classList.remove('active', 'pulse');
-                    logo1.classList.add('active', 'pulse');
-                }
-            }
-            
-            // Alterna as logos a cada 5 segundos
-            setInterval(toggleLogos, 5000);
-            
-            // Inicializar o menu flutuante
-            createFloatingActionMenu();
-            
-            // Verificar se precisa atualizar ao carregar a página
-            const lastUpdate = parseInt(localStorage.getItem('lastGASUpdate') || '0');
-            const now = new Date().getTime();
-            const oneHour = 60 * 60 * 1000;
-            
-            // Se a última atualização foi há mais de uma hora, atualizar automaticamente
-            if (now - lastUpdate > oneHour) {
-                forceGoogleAppsScriptUpdate();
-            }
+            // Esconder após 3 segundos ou quando o iframe carregar
+            setTimeout(() => {
+                loadingIndicator.style.display = 'none';
+            }, 3000);
         });
         
-        // Função para aplicar o tema baseado no gênero
-        function applyTheme(gender) {
-            const color = colors[gender] || colors.neutral;
+        // Manipular carregamento do iframe
+        appFrame.addEventListener('load', () => {
+            console.log('✅ Iframe carregado com sucesso');
+            loadingIndicator.style.display = 'none';
+            errorMessage.style.display = 'none';
+            retryCount = 0;
             
-            // Aplicar cor ao nome do usuário
-            userName.style.color = color;
-            
-            // Aplicar cor ao spinner
-            loadingSpinner.style.borderTopColor = color;
-            
-            // Aplicar cor aos botões
-            installButton.style.backgroundColor = color;
-            retryButton.style.backgroundColor = color;
-            saveNameButton.style.backgroundColor = color;
-            
-            // Salvar a preferência
-            localStorage.setItem('userGender', gender);
-            selectedGender = gender;
-        }
-        
-        // Função para atualizar a cor do botão Salvar
-        function updateSaveButtonColor() {
-            // Verificar o gênero selecionado ou usar o armazenado
-            const gender = selectedGender || localStorage.getItem('userGender') || 'neutral';
-            saveNameButton.style.backgroundColor = colors[gender];
-        }
-        
-        // Função para extrair emoji e gênero da meta tag
-        function detectGenderFromMetaTag() {
-            const metaTitle = document.querySelector('meta[name="title"]');
-            if (!metaTitle) return null;
-            
-            const titleContent = metaTitle.getAttribute('content');
-            
-            // Verificar emojis específicos
-            if (titleContent.includes('💄') || 
-                titleContent.includes('👩') || 
-                titleContent.includes('👧') || 
-                titleContent.includes('👱‍♀️')) {
-                return 'female';
-            } else if (titleContent.includes('👨') || 
-                       titleContent.includes('👦') || 
-                       titleContent.includes('👴') || 
-                       titleContent.includes('🧔') || 
-                       titleContent.includes('🎮')) {
-                return 'male';
-            }
-            
-            return null;
-        }
-        
-        // Configurar seleção de gênero no modal
-        maleOption.addEventListener('click', () => {
-            maleOption.classList.add('selected');
-            femaleOption.classList.remove('selected');
-            selectedGender = 'male';
-            
-            // Atualizar a cor do botão Salvar imediatamente
-            saveNameButton.style.backgroundColor = colors.male;
+            // Mostrar botão de refresh após carregar
+            setTimeout(() => {
+                refreshButton.style.display = 'flex';
+            }, 1000);
         });
         
-        femaleOption.addEventListener('click', () => {
-            femaleOption.classList.add('selected');
-            maleOption.classList.remove('selected');
-            selectedGender = 'female';
-            
-            // Atualizar a cor do botão Salvar imediatamente
-            saveNameButton.style.backgroundColor = colors.female;
+        // Manipular erro do iframe
+        appFrame.addEventListener('error', () => {
+            console.error('❌ Erro ao carregar iframe');
+            handleLoadError();
         });
         
-        // Configurar saudação baseada no horário
-        function setGreeting() {
-            const hour = new Date().getHours();
-            
-            if (hour >= 5 && hour < 12) {
-                greeting.textContent = 'Bom dia!';
-                
-            } else if (hour >= 12 && hour < 18) {
-                greeting.textContent = 'Boa tarde!';
-            } else {
-                greeting.textContent = 'Boa noite!';
+        // Timeout para detectar falha de carregamento
+        setTimeout(() => {
+            // Se após 10 segundos não carregou, considerar erro
+            if (loadingIndicator.style.display !== 'none') {
+                console.warn('⏰ Timeout de carregamento');
+                handleLoadError();
             }
-        }
+        }, 10000);
         
-        // Função para obter o nome e gênero do usuário
-        function getUserInfo() {
-            // Verificar se já existe um nome e gênero salvos
-            const storedName = localStorage.getItem('userName');
-            const storedGender = localStorage.getItem('userGender');
+        // Função para lidar com erros de carregamento
+        function handleLoadError() {
+            loadingIndicator.style.display = 'none';
             
-            // Se tiver informações salvas, usá-las
-            if (storedName) {
-                userName.textContent = storedName;
+            if (retryCount < maxRetries && navigator.onLine) {
+                retryCount++;
+                console.log(`🔄 Tentativa de reconexão ${retryCount}/${maxRetries}`);
                 
-                if (storedGender) {
-                    applyTheme(storedGender);
-                    
-                    // Adicionar emoji baseado no gênero
-                    const emoji = emojis[storedGender];
-                    if (!userName.textContent.includes(emoji)) {
-                        userName.textContent += ' ' + emoji;
-                    }
-                    
-                    return;
-                }
-            }
-            
-            // Tentar detectar gênero da meta tag
-            const detectedGender = detectGenderFromMetaTag();
-            
-            // Tentar obter o nome da meta tag title
-            const metaTitle = document.querySelector('meta[name="title"]');
-            if (metaTitle) {
-                const titleContent = metaTitle.getAttribute('content');
-                // Remover emoji e espaços extras
-                const cleanName = titleContent.replace(/[^\w\s]/gi, '').trim();
-                
-                if (cleanName) {
-                    userName.textContent = cleanName;
-                    
-                    // Se detectou gênero, aplicar tema e salvar
-                    if (detectedGender) {
-                        applyTheme(detectedGender);
-                        
-                        // Adicionar emoji baseado no gênero
-                        userName.textContent += ' ' + emojis[detectedGender];
-                        
-                        // Salvar as informações
-                        localStorage.setItem('userName', cleanName);
-                        return;
-                    }
-                }
-            }
-            
-            // Se chegou aqui, mostrar o modal para o usuário inserir o nome
-            // Mas primeiro, vamos verificar se é a primeira execução
-            const isFirstRun = !localStorage.getItem('appLaunched');
-            if (isFirstRun || !storedName) {
-                // Marcar que o app já foi executado
-                localStorage.setItem('appLaunched', 'true');
-                
-                // Mostrar o modal após um pequeno atraso
                 setTimeout(() => {
-                    nameModal.style.display = 'flex';
-                    // Atualizar a cor do botão Salvar
-                    updateSaveButtonColor();
-                }, 1000);
+                    const timestamp = new Date().getTime();
+                    appFrame.src = appFrame.src.split('?')[0] + '?t=' + timestamp;
+                }, 2000);
             } else {
-                // Aplicar tema neutro se não tiver gênero definido
-                applyTheme('neutral');
+                errorMessage.style.display = 'block';
+                refreshButton.style.display = 'flex';
             }
         }
         
-        // Configurar o botão de salvar nome
-        saveNameButton.addEventListener('click', () => {
-            const name = userNameInput.value.trim();
-            if (name) {
-                // Salvar nome
-                localStorage.setItem('userName', name);
-                
-                // Aplicar tema baseado no gênero selecionado
-                applyTheme(selectedGender);
-                
-                // Atualizar nome com emoji
-                userName.textContent = name + ' ' + emojis[selectedGender];
-                
-                // Fechar modal
-                nameModal.style.display = 'none';
-            } else {
-                // Destacar o input se estiver vazio
-                userNameInput.style.border = '1px solid red';
-                setTimeout(() => {
-                    userNameInput.style.border = '1px solid #ddd';
-                }, 1000);
-            }
-        });
-        
-        // Permitir pressionar Enter no input
-        userNameInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                saveNameButton.click();
-            }
-        });
-        
-        // Inicializar a saudação e o nome
-        setGreeting();
-        getUserInfo();
-        
-        // Verificar conexão com a internet
-        function checkConnection() {
-            if (!navigator.onLine) {
-                showOfflineMessage();
-                return false;
-            }
-            return true;
+        // Função para tentar reconectar
+        function retryConnection() {
+            errorMessage.style.display = 'none';
+            loadingIndicator.style.display = 'block';
+            retryCount = 0;
+            
+            const timestamp = new Date().getTime();
+            appFrame.src = appFrame.src.split('?')[0] + '?t=' + timestamp;
         }
         
-        // Mostrar mensagem offline
-        function showOfflineMessage() {
-            offlineMessage.style.display = 'block';
-            loadingScreen.style.display = 'none';
+        // Função para atualizar o app
+        function refreshApp() {
+            refreshButton.classList.add('refreshing');
+            loadingIndicator.style.display = 'block';
+            
+            const timestamp = new Date().getTime();
+            appFrame.src = appFrame.src.split('?')[0] + '?t=' + timestamp;
+            
+            setTimeout(() => {
+                refreshButton.classList.remove('refreshing');
+            }, 1000);
         }
         
-        // Esconder a tela de carregamento sem transição
-        function hideLoadingScreen() {
-            // Remover diretamente sem animação para evitar tela branca
-            loadingScreen.style.display = 'none';
-        }
-        
-        // Evento de carregamento do iframe
-        appFrame.onload = function() {
-            console.log('Frame carregado com sucesso');
-            // Pequeno atraso para garantir que o iframe esteja completamente renderizado
-            setTimeout(hideLoadingScreen, 100);
-        };
-        
-        // Evento de erro do iframe
-        appFrame.onerror = function() {
-            console.error('Erro ao carregar o iframe');
-            if (navigator.onLine) {
-                // Se estiver online mas o iframe falhou, tentar recarregar
-                setTimeout(() => {
-                    window.location.reload();
-                }, 3000);
-            } else {
-                showOfflineMessage();
-            }
-        };
-        
-        // Timeout para garantir que a tela de carregamento não fique presa
-        setTimeout(function() {
-            hideLoadingScreen();
-        }, 5000);
-        
-        // Verificar se o service worker é suportado
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(error => {
-                    console.error('Erro ao registrar o Service Worker:', error);
-                });
-            });
-        }
-        
-        // Evento para capturar o prompt de instalação
+        // PWA - Capturar prompt de instalação
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
             installButton.style.display = 'block';
         });
         
-        // Configurar o botão de instalação
-        installButton.addEventListener('click', () => {
-            installButton.style.display = 'none';
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                deferredPrompt = null;
-            });
-        });
+        // Função para instalar o app
+        function installApp() {
+            if (deferredPrompt) {
+                installButton.style.display = 'none';
+                deferredPrompt.prompt();
+                
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('✅ App instalado com sucesso');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
         
-        // Verificar se o app já está instalado
+        // Esconder botão de instalação se já estiver instalado
         window.addEventListener('appinstalled', () => {
             installButton.style.display = 'none';
         });
         
-        // Verificar se o app está sendo executado em modo standalone
+        // Verificar se está em modo standalone (já instalado)
         if (window.matchMedia('(display-mode: standalone)').matches || 
             window.navigator.standalone === true) {
             installButton.style.display = 'none';
         }
         
-        // Eventos de conexão
+        // Detectar mudanças de conexão
         window.addEventListener('online', () => {
-            offlineMessage.style.display = 'none';
-            window.location.reload();
+            console.log('🌐 Conexão restaurada');
+            if (errorMessage.style.display !== 'none') {
+                retryConnection();
+            }
         });
         
         window.addEventListener('offline', () => {
-            showOfflineMessage();
+            console.log('📵 Conexão perdida');
+            // Não mostrar erro imediatamente, apenas logar
         });
         
-        // Verificar conexão inicial
-        checkConnection();
-        
-        // Função para forçar a atualização do Google Apps Script
-        function forceGoogleAppsScriptUpdate() {
-            // Adicionar timestamp para evitar cache
-            const timestamp = new Date().getTime();
-            const currentSrc = appFrame.src;
-            const baseUrl = currentSrc.split('?')[0];
-            
-            // Recarregar o iframe com novo timestamp
-            appFrame.src = `${baseUrl}?t=${timestamp}`;
-            
-            // Mostrar a tela de carregamento novamente
-            loadingScreen.style.display = 'flex';
+        // Service Worker para PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('✅ Service Worker registrado');
+                    })
+                    .catch(error => {
+                        console.log('❌ Falha ao registrar Service Worker:', error);
+                    });
+            });
         }
         
-        // Função para mostrar toast de notificação
-        function showToast(message, duration = 3000) {
-            // Verificar se já existe um toast
-            let toast = document.getElementById('toast-notification');
-            
-            // Se não existir, criar um novo
-            if (!toast) {
-                toast = document.createElement('div');
-                toast.id = 'toast-notification';
-                document.body.appendChild(toast);
+        // Atalhos de teclado
+        document.addEventListener('keydown', (e) => {
+            // F5 ou Ctrl+R para refresh
+            if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
+                e.preventDefault();
+                refreshApp();
             }
-            
-            // Definir a mensagem
-            toast.textContent = message;
-            
-            // Mostrar o toast
-            toast.style.bottom = '20px';
-            toast.style.opacity = '1';
-            
-            // Esconder após a duração especificada
-            setTimeout(() => {
-                toast.style.bottom = '-50px';
-                toast.style.opacity = '0';
-            }, duration);
-        }
+        });
+        
+        console.log('🚀 App inicializado - versão limpa');
     </script>
 </body>
 </html>
